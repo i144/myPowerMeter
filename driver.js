@@ -14,8 +14,8 @@ var mqtt = null, mqttClient = null, mqttConnected = false;
 // load currently installed software version and check for updates every hour
 var exec = require('child_process').exec, softwareVersion = null;
 (function checkForUpdates() {
-	console.log('--- check for updates is bypased ---');
-/*	
+	console.log('--- check for updates ---');
+	
     try {
         exec("git log -1 --format='%H %ad'", function (error, stdout, stderr) {
             if (error)
@@ -32,7 +32,7 @@ var exec = require('child_process').exec, softwareVersion = null;
                     var obj = { Installed: { Sha: currentSha, Timestamp: currentDate } };
 
                     // get latest commit from github
-                    exec("curl https://api.github.com/repos/crjens/pipowermeter/git/refs/heads/master", function (error, stdout, stderr) {
+                    exec("curl https://api.github.com/repos/i144/mypowermeter/git/refs/heads/master", function (error, stdout, stderr) {
                         if (error)
                             console.error('unable to fetch latest commit from github: ' + error);
                         else {
@@ -81,7 +81,7 @@ var exec = require('child_process').exec, softwareVersion = null;
     } catch (err) {
         console.error("Error checking for updates: " + err);
     }
-*/
+
     setTimeout(checkForUpdates, 1000 * 60 * 60);
 })();
 
