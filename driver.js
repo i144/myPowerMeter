@@ -14,7 +14,7 @@ var mqtt = null, mqttClient = null, mqttConnected = false;
 // load currently installed software version and check for updates every hour
 var exec = require('child_process').exec, softwareVersion = null;
 (function checkForUpdates() {
-	console.log('--- check for updates ---');
+	console.log('---  check for updates  ---');
     try {
         exec("git log -1 --format='%H %ad'", function (error, stdout, stderr) {
             if (error)
