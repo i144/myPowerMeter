@@ -3,9 +3,9 @@
 ASK_TO_REBOOT=0
 
 # update OS
-echo '>>> Update OS Image'
-sudo apt-get update
-sudo apt-get -y upgrade
+# echo '>>> Update OS Image'
+# sudo apt-get update
+# sudo apt-get -y upgrade
 
 # install nodejs via nvm
 echo '>>> Install NodeJs'
@@ -26,18 +26,18 @@ wget https://project-downloads.drogon.net/wiringpi-latest.deb
 sudo dpkg -i wiringpi-latest.deb
 cd ~
 
-# install and configure PiPowerMeter
+# install and configure myPowerMeter
 if [ ! -d "app" ]; then
-    echo '>>> Install miniPiPowerMeter'
-    git clone https://github.com/i144/miniPiPowerMeter.git app
+    echo '>>> Install myPowerMeter'
+    git clone https://github.com/i144/myPowerMeter.git app
     cd app
     npm install
     ASK_TO_REBOOT=1
 else
-    echo '>>> miniPiPowerMeter already installed'
+    echo '>>> myPowerMeter already installed'
 fi
  
-echo '>>> miniPiPowerMeter is installed'
+echo '>>> myPowerMeter is installed'
 if [ $ASK_TO_REBOOT -ne 0 ]; then
     echo '>>> Restarting...'
     sudo reboot
