@@ -15,8 +15,8 @@ var spawn = require('child_process').spawnSync
 //    console.log("Loading CS5463");
 //    driver = require('./cs5463');
 //} else {
-    console.log("not Loading CS5490");
-//    driver = require('./CS5490');
+    console.log("Loading CS5490");
+    driver = require('./CS5490');
 //}
 
 process.on('message', function (data) {

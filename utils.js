@@ -1,9 +1,9 @@
 var hostName = require("os").hostname();
-var twilio = require('twilio');
+//var twilio = require('twilio');
 
-var fromText = "", toText = "";
-var twilioSID = "";
-var twilioAuthToken = "";
+//var fromText = "", toText = "";
+//var twilioSID = "";
+//var twilioAuthToken = "";
 var exec = require('child_process').exec;
 var client = null;// = new twilio.RestClient(twilioSID, twilioAuthToken);
 var ipSent = false;
@@ -62,13 +62,13 @@ exports.InitializeTwilio = function (to, from, sid, token, deviceName, port) {
     if (to != null && from != null && sid != null && token != null && to != '' && from != '' && sid != '' && token != '') {
 
         console.log("initializing twilio: " + to + ", " + from + ", " + sid + ", " + token + ", " + deviceName);
-        toText = to.toString();
-        fromText = from.toString();
-        twilioSID = sid.toString();
-        twilioAuthToken = token.toString();
+//        toText = to.toString();
+//        fromText = from.toString();
+//        twilioSID = sid.toString();
+//        twilioAuthToken = token.toString();
         if (deviceName != null)
             hostName = deviceName;
-        client = new twilio(twilioSID, twilioAuthToken);
+//        client = new twilio(twilioSID, twilioAuthToken);
 
         if (!ipSent) {
             ipSent = true;

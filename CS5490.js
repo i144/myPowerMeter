@@ -341,37 +341,14 @@ var exports = {
             // enable
 //            cs5490.DigitalWrite(OutputPins.disable, 0);
 			  switch(expression) {
-				case 0:
-					cs5490.DigitalWrite(OutputPins.board0, 0);
-					break;
-					
-				case 1:
-					cs5490.DigitalWrite(OutputPins.board1, 0);
-					break;
-
-				case 2:
-					cs5490.DigitalWrite(OutputPins.board2, 0);
-					break;
-
-				case 3:
-					cs5490.DigitalWrite(OutputPins.board3, 0);
-					break;
-
-				case 4:
-					cs5490.DigitalWrite(OutputPins.board4, 0);
-					break;
-
-				case 5:
-					cs5490.DigitalWrite(OutputPins.board5, 0);
-					break;
-
-				case 6:
-					cs5490.DigitalWrite(OutputPins.board6, 0);
-					break;
-
-				default:
-				// do not enable board
-					break;
+				case 0: cs5490.DigitalWrite(OutputPins.board0, 0); break;
+				case 1:	cs5490.DigitalWrite(OutputPins.board1, 0); break;
+				case 2:	cs5490.DigitalWrite(OutputPins.board2, 0); break;
+				case 3:	cs5490.DigitalWrite(OutputPins.board3, 0); break;
+				case 4:	cs5490.DigitalWrite(OutputPins.board4, 0); break;
+				case 5:	cs5490.DigitalWrite(OutputPins.board5, 0); break;
+				case 6:	cs5490.DigitalWrite(OutputPins.board6, 0); break;
+                default: /* do not enable board  */	break;
 			  }
         }
     },

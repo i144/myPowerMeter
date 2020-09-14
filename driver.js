@@ -121,7 +121,7 @@ var loadConfiguration = function (callback) {
             //console.log("configuration.Circuits: " + JSON.stringify(configuration.Circuits));
 
             var port = data.Configuration.Port;
-            netUtils.InitializeTwilio(data.Configuration.Text, data.Configuration.Twilio, data.Configuration.TwilioSID, data.Configuration.TwilioAuthToken, deviceName, port);
+//            netUtils.InitializeTwilio(data.Configuration.Text, data.Configuration.Twilio, data.Configuration.TwilioSID, data.Configuration.TwilioAuthToken, deviceName, port);
             
             if (mqttClient != null) {
                 mqttClient.end();
