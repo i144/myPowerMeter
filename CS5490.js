@@ -1,6 +1,14 @@
+
+"use strict";
+
+// use mraa to toggle gpio
+const mraa = require('mraa'); //require mraa
+console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the console
+
 var cs5490 = null;
 // comment below line for WebMatrix testing
-var cs5490 = require("CS5490");
+//var cs5490 = require("CS5490");
+var cs5490 = require("./common"); // DEBUG
 var common = require("./common");
 
 var HardwareVersion = 0;
@@ -68,23 +76,23 @@ var Registers = {
 };
 
 var OutputPins = {
-    channel0: 38,    
-    channel1: 40,    
-    channel2: 37,    
-    channel3: 35,   
-    board0: 18,      
-    board1: 22,      
+    channel0: 38,
+    channel1: 40,
+    channel2: 37,
+    channel3: 35,
+    board0: 18,
+    board1: 22,
     board2: 31,
-	board3: 29,      
-	board4: 33,      
-	board5: 32,      
-	board6: 36,      
-    reset: 15        
+    board3: 29,
+    board4: 33,
+    board5: 32,
+    board6: 36,
+    reset: 15
 };
 
 var InputPins = {
-    version0: 11,    
-    version1: 12,    
+    version0: 11,
+    version1: 12,
     version2: 16,
     version3: 7
 };
@@ -132,7 +140,7 @@ var Pad16 = function(n)
 var write = function (register, val, desc) {
     if (_DeviceOpen) {
         val = parseInt(val)
-        cs5490.WriteRegister(register[0], register[1], val)
+        //cs5490.WriteRegister(register[0], register[1], val) TODO:
         if (desc != null)
             console.log('wrote: [' + register[0] + ', ' + register[1] + '] -> ' + Pad16(val.toString(16)) + ' ' + desc);
     }
@@ -140,7 +148,7 @@ var write = function (register, val, desc) {
 
 var read = function (register, desc) {
     if (_DeviceOpen) {
-        var result = cs5490.ReadRegister(register[0], register[1]);
+        var result = 1234; // cs5490.ReadRegister(register[0], register[1]); TODO:
         if (desc != null)
             console.log('read: [' + register[0] + ', ' + register[1] + '] -> ' + Pad16(result.toString(16)) + ' ' + desc);
 
@@ -204,7 +212,6 @@ var ResetIfNeeded = function () {
     });
 
     /*
-
     var config2 = read(Registers.Config2);
     var status0 = read(Registers.Status0);
     var sampleCount = Configuration.SampleTime * 4000;
@@ -213,7 +220,6 @@ var ResetIfNeeded = function () {
         console.log('Resetting due to SampleCount: ' + sampleCount)
         Reset();
     }
-
     // Check status of:
     //   POR, IOR, VOR, IOC, IC
     //   High-pass filters enabled
@@ -246,22 +252,22 @@ var Reset = function () {
     console.log('RESET: ' + OutputPins.reset);
 
     // HARD RESET CHIP
-    cs5490.DigitalPulse(OutputPins.reset, 0, 1, 200);
+    // cs5490.DigitalPulse(OutputPins.reset, 0, 1, 200);  TODO:
 
     sleep(1000);
 
-    cs5490.Open("/dev/serial0", 600);   // raspberry pi
+    //cs5490.Open("/dev/serial0", 600);   // raspberry pi TODO:
     _DeviceOpen = true;
 
-    cs5490.Flush();
+    //cs5490.Flush(); TODO:
     //DumpRegisters();
     
     baud = 500000
     BR = Math.ceil(baud * 524288 / 4096000);
     write(Registers.SerialControl, (2 << 16) + BR); 
-    cs5490.Open("/dev/serial0", baud)
+    // cs5490.Open("/dev/serial0", baud) TODO:
     
-    cs5490.Flush();
+    // cs5490.Flush(); TODO:
     //DumpRegisters();
 
     //cs5490.Instruction(0x01); // software Reset
@@ -276,7 +282,6 @@ var Reset = function () {
 
     /*
     write(Registers.Status0, 0xE5557D, "clear status");
-
     var config2 = read(Registers.Config2, 'read Config2 register');
     // A = 1010  => High-Pass filters enabled on both current and voltage channels
     write(Registers.Config2, config2 | 0xA)
@@ -295,7 +300,7 @@ var exports = {
     // currentchannel should be 0-15
     // voltagechannel should be 0-5 - not used
     SetCircuit: function (board, currentChannel, voltageChannel) {
-        if (board < 0 || board > 7) {
+        if (board < 0 || board > 6) {
             console.log('Invalid board: ' + board);
             return;
         }
@@ -305,51 +310,33 @@ var exports = {
             return;
         }
 
-        if (voltageChannel < 0 || voltageChannel > 5) {
-            console.log('Invalid voltage channel: ' + voltageChannel);
-            return;
-        }
-
-        if (_DeviceOpen) {
-
-            // disable
-//            cs5490.DigitalWrite(OutputPins.disable, 1);
-          cs5490.DigitalWrite(OutputPins.board0, 1);
-		  cs5490.DigitalWrite(OutputPins.board1, 1);
-		  cs5490.DigitalWrite(OutputPins.board2, 1);
-		  cs5490.DigitalWrite(OutputPins.board3, 1);
-		  cs5490.DigitalWrite(OutputPins.board4, 1);
-		  cs5490.DigitalWrite(OutputPins.board5, 1);
-		  cs5490.DigitalWrite(OutputPins.board6, 1);
+        if( _DeviceOpen ){
+            // disable all boards
+			pin_board0.write(1);
+			pin_board1.write(1);
+			pin_board2.write(1);
+			pin_board3.write(1);
+			pin_board4.write(1);
+			pin_board5.write(1);
+			pin_board6.write(1);
   
-            // set board
-            cs5490.DigitalWrite(OutputPins.board0, (board & 0x1));
-            cs5490.DigitalWrite(OutputPins.board1, (board & 0x2));
-            cs5490.DigitalWrite(OutputPins.board2, (board & 0x4));
-
             // set current channel
-            cs5490.DigitalWrite(OutputPins.channel0, (currentChannel & 0x1));
-            cs5490.DigitalWrite(OutputPins.channel1, (currentChannel & 0x2));
-            cs5490.DigitalWrite(OutputPins.channel2, (currentChannel & 0x4));
-            cs5490.DigitalWrite(OutputPins.channel3, (currentChannel & 0x8));
-
-            // set voltage channel
-//            cs5490.DigitalWrite(OutputPins.voltage0, (voltageChannel & 0x1));
-//            cs5490.DigitalWrite(OutputPins.voltage1, (voltageChannel & 0x2));
-//            cs5490.DigitalWrite(OutputPins.voltage2, (voltageChannel & 0x4));
-
-            // enable
-//            cs5490.DigitalWrite(OutputPins.disable, 0);
-			  switch(expression) {
-				case 0: cs5490.DigitalWrite(OutputPins.board0, 0); break;
-				case 1:	cs5490.DigitalWrite(OutputPins.board1, 0); break;
-				case 2:	cs5490.DigitalWrite(OutputPins.board2, 0); break;
-				case 3:	cs5490.DigitalWrite(OutputPins.board3, 0); break;
-				case 4:	cs5490.DigitalWrite(OutputPins.board4, 0); break;
-				case 5:	cs5490.DigitalWrite(OutputPins.board5, 0); break;
-				case 6:	cs5490.DigitalWrite(OutputPins.board6, 0); break;
-                default: /* do not enable board  */	break;
-			  }
+			pin_channel0.write(currentChannel & 0x1);
+			pin_channel1.write(currentChannel & 0x2);
+			pin_channel2.write(currentChannel & 0x4);
+			pin_channel3.write(currentChannel & 0x8);
+			
+            // enable only selected board
+            switch( board ){
+				case 0: pin_board0.write(0); break;
+				case 1: pin_board1.write(0); break;
+				case 2: pin_board2.write(0); break;
+				case 3: pin_board3.write(0); break;
+				case 4: pin_board4.write(0); break;
+				case 5: pin_board5.write(0); break;
+				case 6: pin_board6.write(0); break;
+				default: /* do not enable board  */ break;
+            }
         }
     },
     ReadPower: function (iFactor, vFactor) {
@@ -373,7 +360,7 @@ var exports = {
         // do measurement
         var instSamples;
         try {
-            instSamples = cs5490.MeasureEnergy(sampleBuffer);
+            instSamples = 0; // cs5490.MeasureEnergy(sampleBuffer); TODO:
             if (instSamples <= 0) {
                 console.log("MeasureEnergy returned: " + instSamples + ' samples');
                 return null;
@@ -451,36 +438,82 @@ var exports = {
     },
     Close: function () {
         _DeviceOpen = false;
-        if (cs5490 != null)
-            cs5490.Close();
+        if (cs5490 != null){
+            //cs5490.Close(); TODO:
+			console.log("Close");
+		}
     },
     Open: function (data) {
         Configuration = data.Configuration;
        
         if (cs5490 != null) {
-
             // enable input gpio pins
-            for (var pin in InputPins) {
-                cs5490.PinMode(InputPins[pin], 0);
-            }
-
-            // read hardware version
-            var ver0 = cs5490.DigitalRead(InputPins.version0);
-            var ver1 = cs5490.DigitalRead(InputPins.version1);
-            var ver2 = cs5490.DigitalRead(InputPins.version2);
-            var ver3 = cs5490.DigitalRead(InputPins.version3);
-
+            let pin_ver0 = new mraa.Gpio(InputPins.version0); //setup digital read on pin version0
+            let pin_ver1 = new mraa.Gpio(InputPins.version1); //setup digital read on pin version1
+            let pin_ver2 = new mraa.Gpio(InputPins.version2); //setup digital read on pin version2
+            let pin_ver3 = new mraa.Gpio(InputPins.version3); //setup digital read on pin version3
+            
+			//set the gpio direction to input
+            pin_ver0.dir(mraa.DIR_IN);
+			pin_ver1.dir(mraa.DIR_IN);
+			pin_ver2.dir(mraa.DIR_IN);
+			pin_ver3.dir(mraa.DIR_IN);
+            
+			// read hardware version
+            let ver0 = pin_ver0.read(); //read the digital value of the pin
+			let ver1 = pin_ver1.read();
+			let ver2 = pin_ver2.read();
+			let ver3 = pin_ver3.read();
+			
             HardwareVersion = ver3.toString() + ver2.toString() + ver1.toString() + ver0.toString();
 
             // enable output gpio pins
-            for (var pin in OutputPins) {
-                cs5490.PinMode(OutputPins[pin], 1);
-            }
+			var pin_channel0 = new mraa.Gpio(OutputPins.channel0);
+			var pin_channel1 = new mraa.Gpio(OutputPins.channel1);
+			var pin_channel2 = new mraa.Gpio(OutputPins.channel2);
+			var pin_channel3 = new mraa.Gpio(OutputPins.channel3);
+			var pin_board0 = new mraa.Gpio(OutputPins.board0);
+			var pin_board1 = new mraa.Gpio(OutputPins.board1);
+			var pin_board2 = new mraa.Gpio(OutputPins.board2);
+			var pin_board3 = new mraa.Gpio(OutputPins.board3);
+			var pin_board4 = new mraa.Gpio(OutputPins.board4);
+			var pin_board5 = new mraa.Gpio(OutputPins.board5);
+			var pin_board6 = new mraa.Gpio(OutputPins.board6);
+			var pin_reset = new mraa.Gpio(OutputPins.reset);
+
+			pin_channel0.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_channel1.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_channel2.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_channel3.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board0.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board1.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board2.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board3.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board4.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board5.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_board6.dir(mraa.DIR_OUT); //set the gpio direction to output
+			pin_reset.dir(mraa.DIR_OUT); //set the gpio direction to output
+
+			pin_channel0.write(0); // channel = 0
+			pin_channel1.write(0);
+			pin_channel2.write(0);
+			pin_channel3.write(0);
+			
+			pin_board0.write(1); // disable all boards
+			pin_board1.write(1);
+			pin_board2.write(1);
+			pin_board3.write(1);
+			pin_board4.write(1);
+			pin_board5.write(1);
+			pin_board6.write(1);
+
+			pin_reset.write(0); // hold in reset
 
             Reset();
             console.log("Device opened: Hardware version: " + HardwareVersion);
 
-            return { "DriverVersion": cs5490.DriverVersion(), "HardwareVersion": HardwareVersion};
+            //return { "DriverVersion": cs5490.DriverVersion(), "HardwareVersion": HardwareVersion}; TODO: DriverVersion
+			return { "DriverVersion 1234", "HardwareVersion": HardwareVersion};
         }
     }
 };
