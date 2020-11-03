@@ -95,9 +95,9 @@
 
                     $(templates.probedeftable(result)).appendTo($('#probedefs'));
 
-                    //if (location.search.indexOf("advanced") == -1) {
-                    //    $('.advanced').closest('tr').hide();
-                    //}
+                    if (location.search.indexOf("advanced") == -1) {
+                        $('.advanced').closest('tr').hide();
+                    }
                 }
             });
         }
@@ -332,8 +332,8 @@
                     probe.Type = $(row2).find('#type option:selected').val();
                     probe.Board = $(row2).find('#board option:selected').val();
                     probe.CurrentChannel = $(row2).find('#currentchannel option:selected').val();
-                    //probe.VoltageChannel = $(row2).find('#voltagechannel option:selected').val();
-                    //probe.SourceType = $(row2).find('#sourcetype option:selected').val();
+                    probe.VoltageChannel = $(row2).find('#voltagechannel option:selected').val();
+                    probe.SourceType = $(row2).find('#sourcetype option:selected').val();
                     probe.Breaker = $(row2).find('#breaker option:selected').val();
                     probe.Alert = $(row2).find('#alert').val();
                     sensor.Probes.push(probe);
@@ -543,7 +543,7 @@
                 <th>Description</th>
                 <th>Main</th>
                 <th>Enabled</th>
-                <th>Sensor, Board, Channel, Breaker, Alert (mins, watts)</th>
+                <th>Sensor, Board, Channel, Voltage, Type, Breaker, Alert (mins, watts)</th>
                 <th><img src='images/add.jpg' class='size18x18' onClick='addCircuit()'></th>
             </tr>
             {{#each Result.Circuits}}
@@ -629,6 +629,27 @@
                         <option value='13'>13</option>
                         <option value='14'>14</option>
                         <option value='15'>15</option>
+                    {{/select}}
+                </select>
+            </td>
+            <td>
+                <select id="voltagechannel" >
+                    {{#select VoltageChannel}}
+                        <option value='0'>V1-N</option>
+                        <option value='1'>V2-N</option>
+                        <option value='2'>V3-N</option>
+                        <option value='3'>V1-V2</option>
+                        <option value='4'>V1-V3</option>
+                        <option value='5'>V2-V3</option>
+                    {{/select}}
+                </select>
+            </td>
+            <td>
+                <select id="sourcetype">
+                    {{#select SourceType}}
+                    <option value='0'>Both</option>
+                    <option value='1'>Load</option>
+                    <option value='2'>Source</option>
                     {{/select}}
                 </select>
             </td>
