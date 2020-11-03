@@ -9,15 +9,15 @@ var spawn = require('child_process').spawnSync
 
 // Read pin 22 which is Reset on v3.* hardware
 // and has an external pull-up
-//var pin22 = spawn("gpio", [-1, "read", 22])
+var pin22 = spawn("gpio", [-1, "read", 22])
 
-//if (pin22.stdout == 1) {
-//    console.log("Loading CS5463");
-//    driver = require('./cs5463');
-//} else {
+if (pin22.stdout == 1) {
+    console.log("Loading CS5463");
+    driver = require('./cs5463');
+} else {
     console.log("Loading CS5490");
     driver = require('./CS5490');
-//}
+}
 
 process.on('message', function (data) {
     //    console.log('reader received: ' + data.Action);
